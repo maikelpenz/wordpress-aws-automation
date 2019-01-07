@@ -11,7 +11,7 @@ private_vpc_name = "PrivateVPC"
 private_cidr_block = "172.16.0.0/22"
 private_vpc_endpoint_s3 = True
 private_vpc_subnets = [
-    {"name":"public_subnet_a", "type":"public", "cidr_block":"172.16.0.0/24", "availability_zone":"us-east-1a", "map_ip_on_launch":"true", "nat_gateway":"true"},
+    {"name":"public_subnet_a", "type":"public", "cidr_block":"172.16.0.0/24", "availability_zone":"us-east-1a", "map_ip_on_launch":"true", "nat_gateway":"false"},
     {"name":"public_subnet_b", "type":"public", "cidr_block":"172.16.1.0/24", "availability_zone":"us-east-1b", "map_ip_on_launch":"true", "nat_gateway":"false"},
     {"name":"private_subnet_a", "type":"private", "cidr_block":"172.16.2.0/24", "availability_zone":"us-east-1a", "map_ip_on_launch":"false", "nat_gateway":"false"},
     {"name":"private_subnet_b", "type":"private", "cidr_block":"172.16.3.0/24", "availability_zone":"us-east-1b", "map_ip_on_launch":"false", "nat_gateway":"false"}
