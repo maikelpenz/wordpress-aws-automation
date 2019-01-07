@@ -13,7 +13,7 @@ from troposphere.elasticloadbalancingv2 import LoadBalancer, TargetGroup, Listen
 
 class WordPress:
     def __init__(self, stage, database_name, database_instance_class, database_engine, database_engine_version, 
-                       database_username, database_password, database_port, database_name_tag,
+                       database_username, database_password, database_port, database_multiaz, database_name_tag,
                        write_instance_image_id, write_instance_type, write_instance_key_name,
                        read_instance_image_id, read_instance_type, read_instance_key_name,
                        private_vpc_name, private_vpc_subnets):
@@ -25,6 +25,7 @@ class WordPress:
         self.database_username = database_username
         self.database_password = database_password
         self.database_port = database_port
+        self.database_multiaz = database_multiaz
         self.database_name_tag = database_name_tag
         self.write_instance_image_id = write_instance_image_id
         self.write_instance_type = write_instance_type
@@ -144,6 +145,7 @@ class WordPress:
                 MasterUserPassword=self.database_password,
                 Port=self.database_port,
                 BackupRetentionPeriod=0,
+                MultiAZ=self.database_multiaz,
                 DBSubnetGroupName=Ref(rds_subnet_group),
                 VPCSecurityGroups=[Ref(rds_private_security_group)],
                 Tags=Tags(

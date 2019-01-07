@@ -53,6 +53,7 @@ database_engine_version = "5.7.23"
 database_username = "wordpress"
 database_password = "password"
 database_port = 3306
+database_multiaz = False
 database_name_tag = "MySQLInstance"
 
 # write instance
@@ -66,7 +67,8 @@ read_instance_type = "t2.micro"
 read_instance_key_name = "<INSERT KEY NAME HERE>"
 
 wordpress = wordpress.WordPress(stage, database_name, database_instance_class, database_engine, 
-                                database_engine_version, database_username, database_password, database_port, database_name_tag,
+                                database_engine_version, database_username, database_password, database_port,
+                                database_multiaz, database_name_tag,
                                 write_instance_image_id, write_instance_type, write_instance_key_name,
                                 read_instance_image_id, read_instance_type, read_instance_key_name,
                                 private_vpc_name, private_vpc_subnets)
