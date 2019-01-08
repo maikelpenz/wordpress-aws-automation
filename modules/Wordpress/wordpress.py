@@ -412,7 +412,7 @@ class WordPress:
                 TargetGroupARNs=[Ref(target_group)],
                 MaxSize="3",
                 MinSize="1",
-                VPCZoneIdentifier=private_subnets,
+                VPCZoneIdentifier=public_subnets,
                 Tags=[
                     Tag("Name", "{}-wordpress-read-node".format(self.stage), True)
                 ]
