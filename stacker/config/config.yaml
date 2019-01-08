@@ -5,25 +5,25 @@ namespace: "custom-wordpress"
 
 stacks:
   - name: PrivateVPC
-    template_path: ../../modules/<INSERT YAML TEMPLATE HERE>
+    template_path: ../../modules/template_vpc_Privatevpc.yaml
     description: Private VPC for Wordpress environment
     profile: ${env_profile}
   - name: BastionVPC
-    template_path: ../../modules/<INSERT YAML TEMPLATE HERE>
+    template_path: ../../modules/template_vpc_Bastionvpc.yaml
     description: Bastion VPC for Wordpress environment
     profile: ${env_profile}
   - name: PeerVPCs
-    template_path: ../../modules/<INSERT YAML TEMPLATE HERE>
+    template_path: ../../modules/template_peer_vpcs.yaml
     description: VPC Peering for Wordpress environment
     profile: ${env_profile}
     requires: [PrivateVPC, BastionVPC]
   - name: BastionHost
-    template_path: ../../modules/<INSERT YAML TEMPLATE HERE>
+    template_path: ../../modules/template_bastion_host.yaml
     description: Bastion Host for Wordpress environment
     profile: ${env_profile}
     requires: [PeerVPCs]
   - name: Wordpress
-    template_path: ../../modules/<INSERT YAML TEMPLATE HERE>
+    template_path: ../../modules/template_wordpress.yaml
     description: Wordpress environment
     profile: ${env_profile}
     requires: [BastionHost]
