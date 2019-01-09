@@ -1,14 +1,15 @@
 from troposphere import Template, Tags, Ref, GetAtt, Output, Export, Sub, Parameter
 from troposphere.ec2 import Route, VPCGatewayAttachment, SubnetRouteTableAssociation, \
     VPC, Subnet, RouteTable, EIP, Instance, InternetGateway,  \
-    SecurityGroup, NatGateway
+    SecurityGroup, NatGateway, VPCEndpoint
 
 class PrivateVPC:
-    def __init__(self, stage, vpc_name, vpc_cidr_block, subnets):
+    def __init__(self, stage, vpc_name, vpc_cidr_block, vpc_endpoint_s3, subnets):
 
         self.stage = stage
         self.vpc_name = vpc_name
         self.vpc_cidr_block = vpc_cidr_block
+        self.vpc_endpoint_s3 = vpc_endpoint_s3
         self.subnets = subnets
         self.output_list = []
 
@@ -149,6 +150,16 @@ class PrivateVPC:
                         RouteTableId=Ref(private_route_table)
                     )
                 )
+        
+        if self.vpc_endpoint_s3 == True:
+            template.add_resource(
+                VPCEndpoint(
+                    '{}{}VPCEndpointS3'.format(self.stage, vpc_name_formatted),
+                    VpcId=Ref(private_vpc),
+                    ServiceName="com.amazonaws.us-east-1.s3",
+                    RouteTableIds=[Ref(public_route_table), Ref(private_route_table)]
+                )
+            )
 
         # #################### OUTPUTS #####################
 
