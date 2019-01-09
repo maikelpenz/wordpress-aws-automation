@@ -8,10 +8,11 @@ The architecture is similar to the wordpress setup found as part of the [AWS Cer
 [Architecture](#architecture)  
 [Requirements](#requirements)  
 [Usage](#Usage)  
+[Thoughts](#Thoughts)  
 <a name="architecture"/>
 ## Architecture
 
-The architecture of your wordpress environment is highly customizable and can be set by updating the file generate_wordpress_stacks.py inside the modules folder
+The architecture is highly customizable and can be set by updating the file generate_wordpress_stacks.py inside the modules folder
 &nbsp;<a name="requirements"/>
 ## Requirements
 * [Python3](https://www.python.org/downloads/)  
@@ -35,7 +36,7 @@ $ pip install stacker
 &nbsp;<a name="usage"/>
 ## Usage
 
-Follow this sequence of steps to deploy your wordpress environment:
+The following steps show how to deploy the wordpress environment:
 
 #### 1. Environment configuration
 
@@ -87,3 +88,44 @@ To destroy the environment:
 $ stacker destroy .\stacker\config\environments\prod.env .\stacker\config\config.yaml --force
 ```
 
+#### 4. Acessing Wordpress
+
+Once stacker has finished deployed the stacks:
+- Go to the AWS Console > EC2 > Instances and copy the public DNS of the Read Node and open on your browser.
+- Follow the wordpress installation process and fill up the form according to the variables set on the file **modules/generate_wordpress_stacks.py** (e.g: username, password, Database Name). For the Database host, on the AWS Console go to RDS and copy the public endpoint generated for your database.
+
+After you finished the installation, wait about 1 minute so the read nodes download the latest changes and you can access your wordpress blog.
+
+#### 5. Important: Cloudfront manual set up after installation
+
+Unfortunatelly after you configure your wordpress environment through the webpage a wordpress configuration file gets overwritten and you need to manually update the file to connect cloudfront properly. Follow these steps:
+
+* SSH into the Bastion Host and from the bastion host SSH to your write node
+* Update the .htaccess file to allow url rewrite and point your images to Cloudfront
+
+```shell
+nano /var/www/html/.htaccess
+```
+Remove what is in the file and paste the following (remember to replace in the code below the section asking for your cloudfront domain name):
+```shell
+Options +FollowSymlinks 
+RewriteEngine on 
+rewriterule ^wp-content/uploads/(.*)$ http://<YOUR CLOUDFRONT DOMAIN NAME>/$1 [r=301,nc]
+```
+
+Restart apache httpd, just in case:
+
+```shell
+sudo service httpd restart
+```
+
+
+&nbsp;<a name="Thoughts"/>
+## Thoughts
+
+This project was developed to practice cloud automation, so there are definetly better ways to achieve the same result.
+
+Stacker for example provide blueprints so you don't need to generate the cloudformation yaml file and use their templates instead.
+
+
+Also, if you want to use this solution for your "production" blog you may want to add a public domain to your website. Use the AWS service called Route 53 to point a record to your load balancer.
